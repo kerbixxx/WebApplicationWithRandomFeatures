@@ -1,0 +1,40 @@
+﻿@page "/dotatracker"
+@using Models
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<form>
+    <MudTextField @bind-Value="_pickedHero" Label="Ваш герой" Variant="Variant.Text"></MudTextField>
+    <MudTextField @bind-Value="_againstHero" Label="Герой оппонента" Variant="Variant.Text"></MudTextField>
+    <MudButton OnClick="Parse" Variant="Variant.Filled">Найти</MudButton>
+</form>
+
+@if (_dtos != null && _dtos.Count() != 0 )
+{
+    <h1>@_pickedHero Versus @_againstHero</h1>
+    <MudTable Items="_dtos">
+        <HeaderContent>
+            <MudTh>Nr</MudTh>
+            <MudTh>Link</MudTh>
+            <MudTh>Items</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context.Id</MudTd>
+            <MudTd DataLabel="Link"><a href="@context.Link">@context.Link</a></MudTd>
+            <MudTd DataLabel="Link">@if(context.Items!=null) @string.Join(", ",context.Items)</MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+
+@code {
+
+    private string? _pickedHero;
+    private string? _againstHero;
+
+    List<DotaTrackerDTO>? _dtos;
+
+    public async void Parse()
+    {
+        _dtos = await Parser(_pickedHero!,_againstHero!);
+        StateHasChanged();
+    }
+}
