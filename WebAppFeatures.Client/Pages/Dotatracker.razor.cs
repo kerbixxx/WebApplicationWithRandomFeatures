@@ -4,8 +4,8 @@ using System.Xml.Linq;
 using AngleSharp;
 using AngleSharp.Dom;
 using AngleSharp.Io.Network;
-using Models;
 using MudBlazor;
+using Models.DTOs;
 
 namespace WebAppFeatures.Client.Pages
 {
@@ -16,7 +16,7 @@ namespace WebAppFeatures.Client.Pages
             var config = Configuration.Default.WithRequesters().WithDefaultLoader();
 
             var context = BrowsingContext.New(config);
-            var pickedHeroLink = pickedHero.Replace("_", "%20");
+            var pickedHeroLink = pickedHero.Replace("_", "%20").Replace("'", "%27");
             var document = await context.OpenAsync($"https://dota2protracker.com/hero/{pickedHeroLink}");
 
             var inputs = document.QuerySelectorAll(".pros-stats a").ToList();

@@ -10,7 +10,7 @@
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\WebAppFeatures.Client\WebAppFeatures.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.2" />
-    <PackageReference Include="MudBlazor" Version="6.16.0" />
+    <PackageReference Include="MudBlazor" Version="5.0.10" />
   </ItemGroup>
 
 </Project>

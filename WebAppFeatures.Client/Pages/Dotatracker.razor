@@ -1,16 +1,23 @@
 ﻿@page "/dotatracker"
-@using Models
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@using Models.DTOs
+@using Models.Enums
+@rendermode @(new InteractiveServerRenderMode())
 
 <form>
-    <MudTextField @bind-Value="_pickedHero" Label="Ваш герой" Variant="Variant.Text"></MudTextField>
-    <MudTextField @bind-Value="_againstHero" Label="Герой оппонента" Variant="Variant.Text"></MudTextField>
-    <MudButton OnClick="Parse" Variant="Variant.Filled">Найти</MudButton>
+    <MudGrid>
+        <MudItem xs="50" sm="6" md="4">
+            <MudAutocomplete T="string" label="Ваш герой" @bind-Value="value1" SearchFunc="@Search1">
+            </MudAutocomplete>
+        </MudItem>
+        <MudItem xs="50" sm="6" md="4">
+            <MudAutocomplete T="string" label="Герой оппонента" @bind-Value="value2" SearchFunc="@Search1">
+            </MudAutocomplete>
+        </MudItem>
+        <MudButton OnClick="Parse" Variant="Variant.Filled">Найти</MudButton>
+    </MudGrid>
 </form>
-
 @if (_dtos != null && _dtos.Count() != 0 )
 {
-    <h1>@_pickedHero Versus @_againstHero</h1>
     <MudTable Items="_dtos">
         <HeaderContent>
             <MudTh>Nr</MudTh>
@@ -26,15 +33,40 @@
 }
 
 @code {
-
-    private string? _pickedHero;
-    private string? _againstHero;
+    private bool resetValueOnEmptyText;
+    private bool coerceText;
+    private bool coerceValue;
+    private string? value1;
+    private string? value2;
+    private string[] heroes = new HeroCatalogue().heroes;
 
     List<DotaTrackerDTO>? _dtos;
 
     public async void Parse()
     {
-        _dtos = await Parser(_pickedHero!,_againstHero!);
+        _dtos = await Parser(value1!,value2!);
         StateHasChanged();
+    }
+
+    private async Task<IEnumerable<string>> Search1(string value)
+    {
+        // In real life use an asynchronous function for fetching data from an api.
+        await Task.Delay(1);
+
+        // if text is null or empty, show complete list
+        if (string.IsNullOrEmpty(value))
+            return heroes;
+        return heroes.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    private async Task<IEnumerable<string>> Search2(string value)
+    {
+        // In real life use an asynchronous function for fetching data from an api.
+        await Task.Delay(1);
+
+        // if text is null or empty, don't return values (drop-down will not open)
+        if (string.IsNullOrEmpty(value))
+            return new string[0];
+        return heroes.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
 }
