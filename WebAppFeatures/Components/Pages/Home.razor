@@ -1,3 +1,9 @@
 ﻿@page "/"
-
+@inject NavigationManager NavManager
 <PageTitle>Веб-приложение для различных функций</PageTitle>
+
+@code{
+    protected override async Task OnInitializedAsync(){
+        NavManager.NavigateTo("/dotatracker");
+    }
+}
