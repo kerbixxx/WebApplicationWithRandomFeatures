@@ -27,11 +27,20 @@
         <RowTemplate>
             <MudTd DataLabel="Nr">@context.Id</MudTd>
             <MudTd DataLabel="Link"><a href="@context.Link">@context.Link</a></MudTd>
-            <MudTd DataLabel="Link">@if(context.Items!=null) @string.Join(", ",context.Items)</MudTd>
+            <MudTd DataLabel="Link"> @if(context.Items!=null) @String.Join(", ",context.Items)
+                @*foreach(var item in context.Items)
+                    {
+                        <img src=$"img/{item}.jpg" height="32"/>
+                    } *@
+            </MudTd>
         </RowTemplate>
-    </MudTable>
+        </MudTable>
 }
-
+else
+{
+    <p>@conditionOfQuery</p>
+}
+<img src="img/Abyssal Blade.jpg" height="32"/>
 @code {
     private bool resetValueOnEmptyText;
     private bool coerceText;
@@ -39,34 +48,52 @@
     private string? value1;
     private string? value2;
     private string[] heroes = new HeroCatalogue().heroes;
+    private string conditionOfQuery = "";
+
 
     List<DotaTrackerDTO>? _dtos;
 
     public async void Parse()
     {
         _dtos = await Parser(value1!,value2!);
+        if(_dtos.Count == 0)
+        {
+            conditionOfQuery = "Games had not been found";
+        }
         StateHasChanged();
     }
 
     private async Task<IEnumerable<string>> Search1(string value)
     {
-        // In real life use an asynchronous function for fetching data from an api.
         await Task.Delay(1);
 
-        // if text is null or empty, show complete list
         if (string.IsNullOrEmpty(value))
             return heroes;
-        return heroes.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        var filteredHeroes = heroes.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        var sortedHeroes = filteredHeroes.OrderBy(hero =>
+            {
+                int matchScore = hero.IndexOf(value, StringComparison.InvariantCultureIgnoreCase);
+                if (matchScore == -1) matchScore = int.MaxValue;
+                return matchScore;
+            });
+
+        return sortedHeroes;
     }
 
     private async Task<IEnumerable<string>> Search2(string value)
     {
-        // In real life use an asynchronous function for fetching data from an api.
         await Task.Delay(1);
 
-        // if text is null or empty, don't return values (drop-down will not open)
         if (string.IsNullOrEmpty(value))
-            return new string[0];
-        return heroes.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+            return heroes;
+        var filteredHeroes = heroes.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        var sortedHeroes = filteredHeroes.OrderBy(hero =>
+            {
+                int matchScore = hero.IndexOf(value, StringComparison.InvariantCultureIgnoreCase);
+                if (matchScore == -1) matchScore = int.MaxValue;
+                return matchScore;
+            });
+
+        return sortedHeroes;
     }
 }

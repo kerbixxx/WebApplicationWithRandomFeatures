@@ -13,12 +13,12 @@ namespace WebAppFeatures.Client.Pages
     {
         public async Task<List<DotaTrackerDTO>> Parser(string pickedHero, string againstHero)
         {
+
             var config = Configuration.Default.WithRequesters().WithDefaultLoader();
 
             var context = BrowsingContext.New(config);
             var pickedHeroLink = pickedHero.Replace("_", "%20").Replace("'", "%27");
             var document = await context.OpenAsync($"https://dota2protracker.com/hero/{pickedHeroLink}");
-
             var inputs = document.QuerySelectorAll(".pros-stats a").ToList();
 
             string regex = @"^row-\d+";
@@ -28,6 +28,7 @@ namespace WebAppFeatures.Client.Pages
             int i = 1;
 
             var trElements = document.QuerySelectorAll("tr");
+
             foreach (var tr in trElements)
             {
                 var className = tr.GetAttribute("class");
