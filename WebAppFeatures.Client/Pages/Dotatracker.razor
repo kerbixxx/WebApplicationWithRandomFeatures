@@ -27,11 +27,11 @@
         <RowTemplate>
             <MudTd DataLabel="Nr">@context.Id</MudTd>
             <MudTd DataLabel="Link"><a href="@context.Link">@context.Link</a></MudTd>
-            <MudTd DataLabel="Link"> @if(context.Items!=null) @String.Join(", ",context.Items)
-                @*foreach(var item in context.Items)
-                    {
-                        <img src=$"img/{item}.jpg" height="32"/>
-                    } *@
+            <MudTd DataLabel="Link"> @* @if(context.Items!=null) @String.Join(", ",context.Items) *@
+                @foreach (var item in context.Items)
+                {
+                    <img src=@($"img/{item}.jpg") height="32" />
+                }
             </MudTd>
         </RowTemplate>
         </MudTable>
@@ -40,7 +40,6 @@ else
 {
     <p>@conditionOfQuery</p>
 }
-<img src="img/Abyssal Blade.jpg" height="32"/>
 @code {
     private bool resetValueOnEmptyText;
     private bool coerceText;
