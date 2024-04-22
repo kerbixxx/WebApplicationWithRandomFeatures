@@ -13,6 +13,7 @@
     <PackageReference Include="AngleSharp.Io" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
     <PackageReference Include="MudBlazor" Version="5.0.15" />
+    <PackageReference Include="PuppeteerSharp" Version="15.1.0" />
   </ItemGroup>
 
   <ItemGroup>
